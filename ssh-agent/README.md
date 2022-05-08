@@ -65,7 +65,7 @@ PS C:\Windows\system32> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unre
     2. 上記の PowerShell のプロンプトに「& 」と入力後、右クリックでペーストし、Enter を押して実行。
 
 ### install-wsl-ssh-agent.ps1: wsl-ssh-agentをセットアップ
-#### スクリプトの説明
+### スクリプトの処理内容の説明
 
 [rupor-github/wsl-ssh-agent: Helper to interface with Windows ssh-agent.exe service from Windows Subsystem for Linux (WSL)](https://github.com/rupor-github/wsl-ssh-agent) の [Releases](https://github.com/rupor-github/wsl-ssh-agent/releases) から最新版をダウンロード、C:\wsl-ssh-agent に展開します。
 
@@ -75,11 +75,51 @@ install-latest-openssh.ps1 の実行手順と同様にして install-wsl-ssh-age
 
 ### wsl2-edit-bashrc.sh: WSL2のインスタンスでssh-agentを使う設定
 
-#### スクリプトの説明
+### スクリプトの処理内容の説明
 
 socat パッケージをインストールし、 ~/.bashrc に [WSL 2 compatibility](https://github.com/rupor-github/wsl-ssh-agent#wsl-2-compatibility) を少し変更したコードを追加します。
-（ SSH_AUTH_SOCK の値を $HOME/.ssh/agent.sock から $HOME/.ssh/agent-$WSL_DISTRO_NAME.sock に変えています。例えば Ubuntu-22.04 と Ubuntu-20.04 のように WSL2 のインスタンスを複数起動していると ss -a で別インスタンスの出力も出てきたので、名前を重複しないようにしています）。
+（ SSH_AUTH_SOCK の値を $HOME/.ssh/agent.sock から $HOME/.ssh/agent-$WSL_DISTRO_NAME.sock に変えています。例えば Ubuntu-22.04 と Ubuntu-20.04 のように WSL2 のインスタンスを複数起動していると ss -a で別インスタンスの出力も出てきたので、名前を重複しないように変更しています）。
 
 #### セットアップ実行手順
 
-設定したい WSL2 のシェルを開いて wsl2-edit-bashrc.sh を実行します。
+設定したい WSL2 のインスタンスのシェルを開いて wsl2-edit-bashrc.sh を実行します。
+
+例えば C:\Users\hnakamur\Downloads\my-WSL-setup-scripts-main\ssh-agent\wsl2-edit-bashrc.sh にある場合は以下のように実行します。
+
+```
+/mnt/c/Users/hnakamur/Downloads/my-WSL-setup-scripts-main/ssh-agent/wsl2-edit-bashrc.sh
+```
+
+シェルを一旦終了して再度起動するか `exec $SHELL -l` を実行すると ssh-agent が利用できるようになります。
+
+### wsl1-create-shortcut.ps1: WSL1用にwsl-ssh-agentをスタートアップに登録
+### スクリプトの処理内容の説明
+
+[rupor-github/wsl-ssh-agent: Helper to interface with Windows ssh-agent.exe service from Windows Subsystem for Linux (WSL)](https://github.com/rupor-github/wsl-ssh-agent) を WSL1 のインスタンスで利用するには Windows 側で wsl-ssh-agent-gui.exe を実行しておく必要があります。
+
+このスクリプトは wsl-ssh-agent-gui.exe へのショートカットをスタートアップディレクトリに作成して、Windows へのログオン時に自動実行されるようにします。
+wsl-ssh-agent-gui.exe への引数で `-sock C:\wsl-ssh-agent\ssh-agent.sock` とソケットファイルのパスを指定しています。
+
+#### セットアップ実行手順
+
+wsl1-create-shortcut.ps1 の実行には管理者権限は不要です。
+
+エクスプローラで wsl1-create-shortcut.ps1 を選択し、右クリックでポップアップメニューの「PowerShell で実行」を選択して実行します。
+
+### wsl1-edit-profile.sh: WSL1用に ~/.profile に ssh-agent の設定を追加
+### スクリプトの処理内容の説明
+
+WSL1 の ~/.profile に環境変数 SSH_AUTH_SOCK の値を `/mnt/c/wsl-ssh-agent/ssh-agent.sock` に設定するコードを追加します。
+
+
+#### セットアップ実行手順
+
+設定したい WSL1 のインスタンスのシェルを開いて wsl1-edit-profile.sh を実行します。
+
+例えば C:\Users\hnakamur\Downloads\my-WSL-setup-scripts-main\ssh-agent\wsl1-edit-profile.sh にある場合は以下のように実行します。
+
+```
+/mnt/c/Users/hnakamur/Downloads/my-WSL-setup-scripts-main/ssh-agent/wsl1-edit-profile.sh
+```
+
+シェルを一旦終了して再度起動するか `exec $SHELL -l` を実行すると ssh-agent が利用できるようになります。
