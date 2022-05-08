@@ -21,9 +21,10 @@ if (-not (Test-Path $installDir)) {
     $downloadsDir = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $zipPath = "$downloadsDir\$zipFilename"
     if (-not (Test-Path $zipPath)) {
-        $resp = Invoke-WebRequest https://github.com/PowerShell/Win32-OpenSSH/releases/latest -Method HEAD -MaximumRedirection 0 -ErrorAction Ignore
+        $repoUrl = 'https://github.com/PowerShell/Win32-OpenSSH'
+        $resp = Invoke-WebRequest "$repoUrl/releases/latest" -Method HEAD -MaximumRedirection 0 -ErrorAction Ignore
         $latestVersion = $resp.Headers.Location -replace '.*/tag/', ''
-        $zipUrl = "https://github.com/PowerShell/Win32-OpenSSH/releases/download/$latestVersion/$zipFilename"
+        $zipUrl = "$repoUrl/releases/download/$latestVersion/$zipFilename"
 
         Write-Output "zipUrl=$zipUrl, zipPath=$zipPath"
         Invoke-WebRequest $zipUrl -OutFile $zipPath
