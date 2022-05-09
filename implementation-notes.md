@@ -31,7 +31,7 @@ if (-not($principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Adm
   exit;^
 }^
 if ((Get-ScheduledTaskInfo -TaskName "$folderName\$taskName" -ErrorAction SilentlyContinue) -eq $null) {^
-    $action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c wsl.exe echo start default WSL instance and enable forwardning of vEthernet \(WSL\)^&^& powershell.exe -Command ""Set-NetIPInterface -InterfaceAlias 'vEthernet (WSL)' -Forwarding Enabled""";^
+    $action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c wsl.exe echo start default WSL instance and enable forwardning of vEthernet \(WSL\) && powershell.exe -Command ""Set-NetIPInterface -InterfaceAlias 'vEthernet (WSL)' -Forwarding Enabled""";^
     $trigger = New-ScheduledTaskTrigger -AtLogOn -User $currentUser.Name;^
     $principal = New-ScheduledTaskPrincipal $currentUser.Name -RunLevel Highest;^
     Register-ScheduledTask -TaskName $taskName -TaskPath $folderName -Action $action -Principal $principal -Trigger $trigger;^
@@ -39,7 +39,6 @@ if ((Get-ScheduledTaskInfo -TaskName "$folderName\$taskName" -ErrorAction Silent
 ```
 
 PowerShell のコマンド列を1行に出力するのですが、 PowerShell の複数のコマンドの区切りに `;` を入れて、改行文字をバッチでエスケープするために `^` を行末に入れています。
-あとは `&` も `^` でエスケープしています。
 
 # PowerShell の文字列内での特殊文字のエスケープ
 

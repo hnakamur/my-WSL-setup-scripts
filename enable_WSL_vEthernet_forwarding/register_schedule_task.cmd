@@ -9,7 +9,7 @@ if (-not($principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Adm
   exit;^
 }^
 if ((Get-ScheduledTaskInfo -TaskName "$folderName\$taskName" -ErrorAction SilentlyContinue) -eq $null) {^
-    $action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c wsl.exe echo start default WSL instance and enable forwardning of vEthernet \(WSL\)^&^& powershell.exe -Command ""Set-NetIPInterface -InterfaceAlias 'vEthernet (WSL)' -Forwarding Enabled""";^
+    $action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c wsl.exe echo start default WSL instance and enable forwardning of vEthernet \(WSL\) && powershell.exe -Command ""Set-NetIPInterface -InterfaceAlias 'vEthernet (WSL)' -Forwarding Enabled""";^
     $trigger = New-ScheduledTaskTrigger -AtLogOn -User $currentUser.Name;^
     $principal = New-ScheduledTaskPrincipal $currentUser.Name -RunLevel Highest;^
     Register-ScheduledTask -TaskName $taskName -TaskPath $folderName -Action $action -Principal $principal -Trigger $trigger;^
