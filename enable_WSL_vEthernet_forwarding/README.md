@@ -6,7 +6,7 @@ WSL2 から Hyper-V の VM に ssh などをするために `vEthernet (WSL)` �
 
 [WSL2 , problem with network connection when VPN used (PulseSecure) · Issue #5068 · microsoft/WSL](https://github.com/microsoft/WSL/issues/5068)
 の [コメント](https://github.com/microsoft/WSL/issues/5068#issuecomment-988877403) の PowerShell のコードで forwarding を有効にできたのですが、
-[別のコメント](https://github.com/microsoft/WSL/issues/5068#issuecomment-1087206431) にあるように VPN 切断時や Windows リブートの度に向こうに戻ってしまいます。
+[別のコメント](https://github.com/microsoft/WSL/issues/5068#issuecomment-1087206431) にあるように VPN 切断時や Windows リブートの度に無効に戻ってしまいます。
 
 そこで、ログオン時に `vEthernet (WSL)` の forwarding を有効にするスケジュールタスクを登録するスクリプトを書きました。
 
